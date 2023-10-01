@@ -1,108 +1,63 @@
-
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { createContext, useContext, useReducer } from "react"
-import 'firebase/auth';
-import { auth, db } from "./firebase";
-import { addDoc, collection, doc, getDocs } from "firebase/firestore";
+import { createContext, useContext, useReducer } from "react";
+import "firebase/auth";
 // Định nghĩa các hành động
-type ActionKey = { type: "login", user: any }
-
+type ActionKey = { type: "login"; user: any } | { type: "logout" }|{type:"notification";notification:Notification};
 // Định nghĩa kiểu trạng thái
 interface DataProcess {
-    user: any,
+  user: any;
+  notification:Notification
 }
+type TypeNotifucation="info" | "warning" | "success" | "error" | "loading" | undefined
 
-const initialState: DataProcess = {
-    user: null,
+interface Notification {
+    show:boolean,
+    type: TypeNotifucation,
+    content:string,
 }
-const DataProcessContext = createContext<{ state: DataProcess; dispatch: React.Dispatch<ActionKey> } | undefined>(undefined);
+const initialState: DataProcess = {
+  user: null,
+  notification:{
+    show:false,
+    type:"success",
+    content:""
+  }
+};
+const DataProcessContext = createContext<
+  { state: DataProcess; dispatch: React.Dispatch<ActionKey> } | undefined
+>(undefined);
 
 function process(state: DataProcess, action: ActionKey): DataProcess {
-    switch (action.type) {
+  switch (action.type) {
+    case "logout":
+        return { ...state, user: null };
+    case "login":
+        return { ...state, user: action.user };
+    case "notification":
+        if (!action.notification.show){
+            action.notification={
+                show:false,
+                type:undefined,
+                content:""
+            }
+        }
+        return { ...state, notification: action.notification };
+    default:
+        throw new Error();
+  }
+}
 
-        case "login":
-            return { ...state, user: action.user };
-        default:
-            throw new Error();
-    }
-}
-interface InformData {
-    auth: string,
-    create_at: Date,
-    key: string,
-    value: string
-}
-async function getDataUserByKey(key: string, state: DataProcess) {
-    if (state.user) {
-        try {
-            const querySnapshot = await getDocs(collection(db, state.user.uid));
-            querySnapshot.docs.forEach(doc => {
-                const data = doc.data() as InformData;
-                if (data.key === key) {
-                    return data.value
-                }
-            });
-        } catch (e) {
-            return null
-        }
-    }
-    return null
-}
-async function saveDataUserByKey(key: string,value:string, state: DataProcess) {
-    if (state.user) {
-        try {
-            const docRef = await addDoc(collection(db, state.user.uid), {
-                auth: state.user.email,
-                create_at: new Date(),
-                key: key,
-                value: value
-            })
-            return docRef.id
-
-        } catch (e) {
-            return null
-        }
-    }
-}
-async function createUserData(state: DataProcess) {
-    if (state.user) {
-        try {
-            const docRef = await addDoc(collection(db, state.user.uid), {
-                auth: state.user.email,
-                create_at: new Date(),
-                key: "userdata",
-                value: state.user.email
-            })
-            return docRef.id
-
-        } catch (e) {
-            return null
-        }
-    }
-    return null
-}
-function getDataByState(state: DataProcess) {
-    if (state.user) {
-        try {
-            // const userRef = doc(db, "inform_user", "");
-        } catch (e) {
-            return null
-        }
-    }
-    return null
-}
 export function DataProvider({ children }: { children: React.ReactNode }) {
-    const [state, dispatch] = useReducer(process, initialState);
-    return (
-        <DataProcessContext.Provider value={{ state, dispatch }}>
-            {children}
-        </DataProcessContext.Provider>
-    );
+  const [state, dispatch] = useReducer(process, initialState);
+  return (
+    <DataProcessContext.Provider value={{ state, dispatch }}>
+      {children}
+    </DataProcessContext.Provider>
+  );
 }
 export function useDataProcess() {
-    const context = useContext(DataProcessContext);
-    if (!context) {
-        throw new Error('useRunCode must be used within a RunCodeProvider');
-    }
-    return context;
+  const context = useContext(DataProcessContext);
+  if (!context) {
+    throw new Error("useRunCode must be used within a RunCodeProvider");
+  }
+  return context;
 }
