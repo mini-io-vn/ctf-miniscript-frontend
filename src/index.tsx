@@ -3,8 +3,17 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, Stack } from '@chakra-ui/react';
 import { DataProvider } from './Data/process';
+import About from './Menu/About';
+import Footer from './Menu/Footer';
+import NavBar from './Menu/NavBar';
+import Reward from './Menu/Reward';
+import Tutorial from './Menu/Tutorial';
+import Notification from './Menu/Notification';
+import { Routes, Route, Router, BrowserRouter } from 'react-router-dom';
+import Leaderboard from '@mui/icons-material/Leaderboard';
+import LeaderboardPage from './Menu/Leaderboard';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -13,10 +22,23 @@ root.render(
   <React.StrictMode>
     <ChakraProvider>
       <DataProvider>
-        <App />
+        <>
+          <Stack>
+            <NavBar></NavBar>
+            <BrowserRouter>
+              <Routes>
+                <Route path="" element={<App />} />
+                <Route path="/bxh" element={<LeaderboardPage />} />
+              </Routes>
+            </BrowserRouter>
+            <Footer></Footer>
+          </Stack>
+
+          <Notification></Notification>
+        </>
       </DataProvider>
     </ChakraProvider>
-  
+
   </React.StrictMode>
 );
 

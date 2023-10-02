@@ -11,19 +11,13 @@ import Tutorial from './Menu/Tutorial';
 
 function App() {
   return (
+
     <>
-    <Stack>
-      <NavBar></NavBar>
       <About></About>
       <Reward></Reward>
       <Tutorial></Tutorial>
-      <Footer></Footer>
-    </Stack>
-    
-    <Notification></Notification>
     </>
-    
-    
+
   );
 }
 

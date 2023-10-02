@@ -39,21 +39,21 @@ export default function Tutorial() {
           icon={<Icon as={FaScroll} w={10} h={10} color={'blackAlpha.500'}/>}
           title={'Nhận đề'}
           text={
-            'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore...'
+            'Tùy vào mỗi kỳ sẽ có mỗi đề với gợi ý khác nhau'
           }
         />
         <Feature
           icon={<Icon as={FaKeycdn} w={10} h={10} color={'blackAlpha.500'}/>}
           title={'Tìm cờ'}
           text={
-            'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore...'
+            'Dùng mọi cách thức để lấy được cờ'
           }
         />
         <Feature
           icon={<Icon as={FaSpellCheck} w={10} h={10} color={'blackAlpha.500'}/>}
           title={'Về đích'}
           text={
-            'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore...'
+            'Nhận cờ và quay về website để nhập và nhận thưởng'
           }
         />
       </SimpleGrid>
